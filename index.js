@@ -53,9 +53,9 @@ server.on('message', (msg, rinfo) => {
             console.error(`сервер отправил корявые данные:\n${msg}\n${err}`)
         }
     }
-    else if(msg.readInt8(0) == -2){
+    else if(msg.readInt8(2) == 9){
         try {
-            console.log('Запрос Je протокол: '+rinfo.port, rinfo.address, msg.readInt8(0))
+            console.log('Запрос Je протокол: '+rinfo.port, rinfo.address, msg)
         } catch (err){
             console.error(`сервер отправил корявые данные:\n${msg}\n${err}`)
         }
