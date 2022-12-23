@@ -1,5 +1,7 @@
 //=== Query ===
 //=== For https://mineserv.top ===
+logger.setTitle("\x1b[95mLL Query\x1b[97m")
+logger.setLogLevel(4)
 const dgram = require('dgram')//UDP datagram socket
 var server = dgram.createSocket('udp4')//Open UDP v4 socket
 var BufferCursor = require('buffercursor')//Buffer Util
@@ -44,7 +46,6 @@ setInterval(() => {
 }, 120000)
 function pongJe(port, addr, msg){
     if(msg.readInt8(2) == 9){//handshake packet
-        logger.debug('hand '+msg.length)
         let bc = new BufferCursor(Buffer.alloc(13))
         bc.writeInt8(0x09)
         bc.writeInt32BE(msg.readInt32BE(3))
@@ -53,7 +54,7 @@ function pongJe(port, addr, msg){
         console.debug('Reply: '+bc.buffer)
     }
     else if(msg.readInt8(2) == 0){
-        logger.debug('stat '+msg.length)
+        let gm
         switch (properties.get('gamemode')){
             case 'survival':
                 gm = 'SMP'
@@ -76,7 +77,6 @@ function pongJe(port, addr, msg){
             wl = 'on'
         }
         if(msg.length == 15){//long query packet
-            logger.debug('long '+msg.length)
             let KVdata = new Map()
             KVdata.set("hostname", String(properties.get('server-name')))
             KVdata.set("gametype", String(gm))
@@ -98,10 +98,8 @@ function pongJe(port, addr, msg){
             d.writeInt8(0x00)
             KVdata.forEach((v,k)=>{
                 d.write(k)
-                logger.debug(k)
                 d.writeInt8(0x00)
                 d.write(v)
-                logger.debug(v)
                 d.writeInt8(0x00)
             })
             d.writeInt8(0x00)
@@ -111,7 +109,6 @@ function pongJe(port, addr, msg){
             d.writeInt8(0x00)
             onlinePlayers.forEach((v,k)=>{
                 d.write(k)
-                log('pls '+k,v)
                 d.writeInt8(0x00)
             })
             d.writeInt8(0x00)
@@ -119,7 +116,6 @@ function pongJe(port, addr, msg){
             console.debug('Reply: '+d.buffer)
         }
         else{
-            logger.warn('short '+msg.length)
             let d = new BufferCursor(Buffer.alloc(512))
             d.writeInt8(0x00)
             d.writeInt32BE(msg.readInt32BE(3))
@@ -164,12 +160,12 @@ server.on('message', (msg, rinfo) => {
 })
 server.on('listening', () => {
     const address = server.address();
-    logger.warn(`query started on ${address.address}:${address.port}`)
-    logger.warn('check ./plugins/MineServ/query/config.json to configure query')
+    logger.info(`\x1b[94mquery started on \x1b[93m${address.address}:${address.port}\x1b[94m!`)
+    logger.info('\x1b[94mcheck \x1b[93m./plugins/MineServ/query/config.json \x1b[94mto configure query')
 });
 server.on('close', () => {
     try {
-        logger.warn('close query')
+        logger.info('\x1b[91mclose query')
     } catch (err) {}
 });
 server.bind(config.get('query-port'), "0.0.0.0")
