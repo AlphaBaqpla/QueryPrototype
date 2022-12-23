@@ -1,6 +1,6 @@
 //=== Query ===
 //=== For https://mineserv.top ===
-logger.setTitle("\x1b[95mLL Query\x1b[97m")
+logger.setTitle("\x1b[95mLL Query\x1b[37m")
 logger.setLogLevel(4)
 const dgram = require('dgram')//UDP datagram socket
 var server = dgram.createSocket('udp4')//Open UDP v4 socket
