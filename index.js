@@ -51,7 +51,7 @@ function pongJe(port, addr, msg){
         bc.writeInt32BE(msg.readInt32BE(3))
         bc.write(token+'\0')
         server.send(bc.buffer, port, addr, (err) => {})
-        console.debug('Reply: '+bc.buffer)
+        logger.debug('Reply: '+bc.buffer)
     }
     else if(msg.readInt8(2) == 0){
         let gm
@@ -113,7 +113,7 @@ function pongJe(port, addr, msg){
             })
             d.writeInt8(0x00)
             server.send(d.buffer, port, addr, (err) => {})
-            console.debug('Reply: '+d.buffer)
+            logger.debug('Reply: '+d.buffer)
         }
         else{
             let d = new BufferCursor(Buffer.alloc(512))
@@ -133,7 +133,7 @@ function pongJe(port, addr, msg){
             d.write(String('0.0.0.0'))
             d.writeInt8(0x00)
             server.send(d.buffer, port, addr, (err) => {})
-            console.debug('Reply: '+d.buffer)
+            logger.debug('Reply: '+d.buffer)
         }
     }
 }
@@ -151,7 +151,7 @@ server.on('message', (msg, rinfo) => {
     }
     else if(msg.readInt8(0) == -2){
         try {
-            console.debug('JE request: port: '+rinfo.port+' addr: '+rinfo.address+' data: '+msg)
+            logger.debug('JE request: port: '+rinfo.port+' addr: '+rinfo.address+' data: '+msg)
             pongJe(rinfo.port, rinfo.address, msg)
         } catch (err){
             logger.debug(`Bad data:\n${msg}\n${err}`)
