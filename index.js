@@ -27,7 +27,7 @@ const un_pong = 0x1c //RakNet Unconnected Pong
 
 function pongBe(port, addr, pingTime) {
     let data = Buffer.alloc(17)
-    let status = `MCPE;${properties.get('server-name')};${mc.getServerProtocolVersion()};${mc.getBDSVersion().replace('v','')};${mc.getOnlinePlayers().length};${properties.get('max-players')};${serverId};${properties.get('level-name')};${properties.get('gamemode')};1`//Responce
+    let status = `MCPE;${properties.get('server-name')};${mc.getServerProtocolVersion()};${mc.getBDSVersion().replace('v','')};0;${properties.get('max-players')};${serverId};${properties.get('level-name')};${properties.get('gamemode')};1`//Responce
     data.writeInt8(un_pong, 0)
     data.writeBigInt64BE(pingTime, 1)
     data.writeBigInt64BE(serverId, 9)
@@ -85,7 +85,7 @@ function pongJe(port, addr, msg){
             KVdata.set("server_engine", String('Bedrock Dedicated Server'))
             KVdata.set("plugins",String( `BDS:LiteLoaderBDS v${ll.versionString()};LLQuery v1.0;`))
             KVdata.set("map", String(properties.get('level-name')))
-            KVdata.set("numplayers", String(playerNum))
+            KVdata.set("numplayers", '0')
             KVdata.set("maxplayers", String(properties.get('max-players')))
             KVdata.set("whitelist", String(wl))
             KVdata.set("hostip", String('0.0.0.0'))
@@ -108,7 +108,7 @@ function pongJe(port, addr, msg){
             d.writeInt8(0x00)
             d.writeInt8(0x00)
             onlinePlayers.forEach((v,k)=>{
-                d.write(k)
+                d.write(k.replace(' ','-'))
                 d.writeInt8(0x00)
             })
             d.writeInt8(0x00)
